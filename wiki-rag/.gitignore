@@ -8,4 +8,3 @@ data
 __pycache__
 assets
 wiki_rag.egg-info/
-wiki-rag/wiki_rag_data/
