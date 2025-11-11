@@ -1,0 +1,10 @@
+venv38
+*.tar
+venv
+IGNORE
+venv310
+venv39
+data
+__pycache__
+assets
+wiki_rag.egg-info/
