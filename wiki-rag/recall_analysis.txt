@@ -1,0 +1,31 @@
+=== IVF-Flat Recall vs Latency Analysis ===
+
+n_probe    Recall@10    Latency    Recommendation
+-----------------------------------------------------------
+10         78.50%       0.43 ms    Too low recall
+100        96.41%       0.79 ms    Good balance
+200        98.30%       1.22 ms    Very good
+300        98.97%       1.59 ms    Excellent
+400        99.29%       1.92 ms    Near perfect
+500        99.48%       2.20 ms    Near perfect
+4096       100.00%      10.76 ms   Perfect (slower)
+
+=== Recommendations ===
+
+For near 100% accuracy:
+  Option 1: n_probe=4096 → 100.00% recall (10.76ms latency)
+           Best accuracy, acceptable latency for most use cases
+  
+  Option 2: n_probe=500 → 99.48% recall (2.20ms latency)
+           Excellent accuracy, much faster
+  
+  Option 3: n_probe=400 → 99.29% recall (1.92ms latency)
+           Great accuracy, fast
+
+=== Command for 100% accuracy ===
+python3 train_ivf.py \
+    --faiss-path wiki_rag_data/wiki_index__top_100000__2025-04-11 \
+    --k 4096 \
+    --n-probe 4096 \
+    --output-dir ./ivf_output_final \
+    --test-recall
