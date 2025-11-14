@@ -1,0 +1,5 @@
+{
+  "n_distances": 4096,
+  "n_centroids": 4096,
+  "centroid_dim": 768
+}

@@ -1,0 +1,12 @@
+{
+  "query_dim": 768,
+  "plaintext_norm_squared": 0.9999998211860657,
+  "plaintext_norm": 0.9999999105930288,
+  "poly_modulus_degree": 8192,
+  "coeff_mod_bit_sizes": [
+    60,
+    40,
+    40,
+    60
+  ]
+}

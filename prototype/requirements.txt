@@ -1,0 +1,13 @@
+# FHE Query Prototype Requirements
+
+# Core dependencies
+numpy>=1.25.0
+tenseal>=0.3.0
+
+# Embeddings
+langchain-community>=0.0.20
+sentence-transformers>=2.2.0
+
+# Optional but recommended
+tqdm>=4.65.0
+
