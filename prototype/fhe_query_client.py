@@ -17,6 +17,8 @@ from typing import Union, Tuple
 import tenseal as ts
 
 from langchain_community.embeddings import HuggingFaceEmbeddings
+
+from prototype.go_runner import run_built_executable
 from rag_utils import PromptedBGE
 
 
@@ -470,6 +472,14 @@ def main():
             top_k_indices,
             Path(args.results_dir)
         )
+
+        # Run the built executable
+        print("\n=== Running client query ===")
+        stdout, stderr, code = run_built_executable(
+            "/Users/antoniajanuszewicz/GolandProjects/Piano-PIR-RAG/client_exe",
+            args=["-ip", "localhost:50051", "-thread", "1", "-input", "/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/decrypted_results/top_k_results.json"]
+        )
+        print(f"Output:\n{stderr}")
         
         print(f"\n{'='*70}")
         print("Summary")
