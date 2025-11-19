@@ -7,6 +7,9 @@ context_public.json
 encrypted_queries/
 encrypted_distances/
 decrypted_results/
+workflow_encrypted_queries/
+workflow_encrypted_distances/
+workflow_decrypted_results/
 
 # Python
 __pycache__/
@@ -37,6 +40,10 @@ ENV/
 *.faiss
 *.bin
 
+# Large workflow outputs (can be regenerated)
+workflow_*/
+
 # Logs
 *.log
+
 

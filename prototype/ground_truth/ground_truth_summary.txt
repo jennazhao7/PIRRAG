@@ -1,0 +1,79 @@
+Ground Truth Summary
+======================================================================
+
+Query: What is machine learning?
+
+Number of clusters: 100
+Top-k per cluster: 5
+
+Top-10 Clusters:
+
+Cluster 1537:
+  1. Vector 61961: distance = 0.4635
+  2. Vector 35515: distance = 0.4654
+  3. Vector 58778: distance = 0.4718
+  4. Vector 36639: distance = 0.4786
+  5. Vector 41113: distance = 0.4852
+
+Cluster 576:
+  1. Vector 47448: distance = 0.4351
+  2. Vector 32319: distance = 0.4362
+  3. Vector 5475: distance = 0.4491
+  4. Vector 43818: distance = 0.4711
+  5. Vector 15186: distance = 0.4976
+
+Cluster 4027:
+  1. Vector 18340: distance = 0.4379
+  2. Vector 16847: distance = 0.4581
+  3. Vector 56951: distance = 0.4631
+  4. Vector 13439: distance = 0.4660
+  5. Vector 35594: distance = 0.5052
+
+Cluster 2262:
+  1. Vector 55374: distance = 0.4437
+  2. Vector 3525: distance = 0.5117
+  3. Vector 31422: distance = 0.5139
+  4. Vector 17343: distance = 0.5553
+  5. Vector 2583: distance = 0.6085
+
+Cluster 217:
+  1. Vector 28797: distance = 0.5019
+  2. Vector 59482: distance = 0.5351
+  3. Vector 46945: distance = 0.5361
+  4. Vector 23387: distance = 0.5537
+  5. Vector 48572: distance = 0.5559
+
+Cluster 1137:
+  1. Vector 53077: distance = 0.4272
+  2. Vector 21767: distance = 0.4808
+  3. Vector 61502: distance = 0.4918
+  4. Vector 9733: distance = 0.4993
+  5. Vector 56015: distance = 0.5026
+
+Cluster 3943:
+  1. Vector 60419: distance = 0.4640
+  2. Vector 23779: distance = 0.4795
+  3. Vector 64401: distance = 0.5017
+  4. Vector 29223: distance = 0.5069
+  5. Vector 32335: distance = 0.5093
+
+Cluster 554:
+  1. Vector 30682: distance = 0.5032
+  2. Vector 61447: distance = 0.5450
+  3. Vector 29722: distance = 0.5542
+  4. Vector 55987: distance = 0.5712
+  5. Vector 31692: distance = 0.6064
+
+Cluster 2380:
+  1. Vector 30103: distance = 0.4717
+  2. Vector 27238: distance = 0.5087
+  3. Vector 53377: distance = 0.5117
+  4. Vector 56787: distance = 0.5123
+  5. Vector 44299: distance = 0.5152
+
+Cluster 1257:
+  1. Vector 58420: distance = 0.4914
+  2. Vector 21676: distance = 0.4973
+  3. Vector 21568: distance = 0.5494
+  4. Vector 61033: distance = 0.5563
+  5. Vector 46783: distance = 0.5763

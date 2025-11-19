@@ -25,3 +25,4 @@ class PromptedBGE(HuggingFaceEmbeddings):
             f"Represent this query for retrieval: {text}"
         )
 
+
