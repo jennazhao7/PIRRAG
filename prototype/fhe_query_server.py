@@ -17,6 +17,8 @@ from pathlib import Path
 from typing import Tuple, List, Optional
 import tenseal as ts
 
+from prototype.go_runner import run_built_executable
+
 
 class FHEQueryServer:
     """
@@ -507,6 +509,14 @@ def main():
     print(f"Computed {len(encrypted_distances)} encrypted distances")
     print(f"Output directory: {args.output_dir}")
     print(f"{'='*70}")
+
+    # Run the built executable
+    print("\n=== Running database server ===")
+    stdout, stderr, code = run_built_executable(
+        "/Users/antoniajanuszewicz/GolandProjects/Piano-PIR-RAG/server_exe",
+        args=["-port","50051", "-database", "/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/uniform_index.txt"]
+    )
+    print(f"Output:\n{stderr}")
 
 
 if __name__ == "__main__":
