@@ -11,3 +11,4 @@ sentence-transformers>=2.2.0
 # Optional but recommended
 tqdm>=4.65.0
 
+
