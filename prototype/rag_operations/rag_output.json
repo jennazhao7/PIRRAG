@@ -106,65 +106,95 @@
   "top_k_results": [
     {
       "vector_index": 49985,
-      "distance": 0.4072955846786499,
-      "title": "Cosine similarity",
-      "content_preview": "In data analysis, cosine similarity is a measure of similarity between two non-zero vectors defined in an inner product space. Cosine similarity is the cosine of the angle between the vectors; that is"
+      "distance": 0.4072958827018738,
+      "content_preview": {
+        "index": 49985,
+        "content_preview": "In data analysis, cosine similarity is a measure of similarity between two non-zero vectors defined in an inner product space. Cosine similarity is the cosine of the angle between the vectors; that is",
+        "distance": 0.4072958827018738
+      }
     },
     {
       "vector_index": 53077,
-      "distance": 0.4271979331970215,
-      "title": "Sequence",
-      "content_preview": "In mathematics, a sequence is an enumerated collection of objects in which repetitions are allowed and order matters. Like a set, it contains members (also called \"elements\", or \"terms\"). The number o"
+      "distance": 0.42719829082489014,
+      "content_preview": {
+        "index": 53077,
+        "content_preview": "In mathematics, a sequence is an enumerated collection of objects in which repetitions are allowed and order matters. Like a set, it contains members (also called \"elements\", or \"terms\"). The number o",
+        "distance": 0.42719829082489014
+      }
     },
     {
       "vector_index": 47448,
-      "distance": 0.43514370918273926,
-      "title": "Data",
-      "content_preview": "Data ( , ) are a collection of discrete or continuous values that convey information, describing the quantity, quality, fact, statistics, other basic units of meaning, or simply sequences of symbols t"
+      "distance": 0.4351438879966736,
+      "content_preview": {
+        "index": 47448,
+        "content_preview": "Data ( , ) are a collection of discrete or continuous values that convey information, describing the quantity, quality, fact, statistics, other basic units of meaning, or simply sequences of symbols t",
+        "distance": 0.4351438879966736
+      }
     },
     {
       "vector_index": 32319,
-      "distance": 0.43615198135375977,
-      "title": "Mnemonic",
-      "content_preview": "A mnemonic device ( ) or memory device is any learning technique that aids information retention or retrieval in the human memory, often by associating the information with something that is easier to"
+      "distance": 0.4361521601676941,
+      "content_preview": {
+        "index": 32319,
+        "content_preview": "A mnemonic device ( ) or memory device is any learning technique that aids information retention or retrieval in the human memory, often by associating the information with something that is easier to",
+        "distance": 0.4361521601676941
+      }
     },
     {
       "vector_index": 60271,
-      "distance": 0.4370126724243164,
-      "title": "Lists of films",
-      "content_preview": "This is a list of film lists.\nBy title.\n&lt;includeonly&gt;&lt;/includeonly&gt;\nThis is an alphabetical list of film articles (or sections within articles about films). It includes made for television"
+      "distance": 0.43701285123825073,
+      "content_preview": {
+        "index": 60271,
+        "content_preview": "This is a list of film lists. By title. &lt;includeonly&gt;&lt;/includeonly&gt; This is an alphabetical list of film articles (or sections within articles about films). It includes made for television",
+        "distance": 0.43701285123825073
+      }
     },
     {
       "vector_index": 18340,
-      "distance": 0.4379369020462036,
-      "title": "ELMo",
-      "content_preview": "ELMo (embeddings from language model) is a word embedding method for representing a sequence of words as a corresponding sequence of vectors. It was created by researchers at the Allen Institute for A"
+      "distance": 0.43793708086013794,
+      "content_preview": {
+        "index": 18340,
+        "content_preview": "ELMo (embeddings from language model) is a word embedding method for representing a sequence of words as a corresponding sequence of vectors. It was created by researchers at the Allen Institute for A",
+        "distance": 0.43793708086013794
+      }
     },
     {
       "vector_index": 55374,
-      "distance": 0.44369709491729736,
-      "title": "List of lists of lists",
-      "content_preview": "This list of lists of lists is a list of articles that are lists of other list articles. Each of the pages linked here is an index to multiple lists on a topic."
+      "distance": 0.4436972141265869,
+      "content_preview": {
+        "index": 55374,
+        "content_preview": "This list of lists of lists is a list of articles that are lists of other list articles. Each of the pages linked here is an index to multiple lists on a topic.",
+        "distance": 0.4436972141265869
+      }
     },
     {
       "vector_index": 5475,
-      "distance": 0.449141263961792,
-      "title": "DOGMA",
-      "content_preview": "DOGMA, short for \"Developing Ontology-Grounded Methods and Applications\", is the name of research project in progress at Vrije Universiteit Brussel's STARLab, Semantics Technology and Applications Res"
+      "distance": 0.44914135336875916,
+      "content_preview": {
+        "index": 5475,
+        "content_preview": "DOGMA, short for \"Developing Ontology-Grounded Methods and Applications\", is the name of research project in progress at Vrije Universiteit Brussel's STARLab, Semantics Technology and Applications Res",
+        "distance": 0.44914135336875916
+      }
     },
     {
       "vector_index": 53416,
-      "distance": 0.45783889293670654,
-      "title": "VACUUM",
-      "content_preview": "VACUUM\n is a set of normative guidance principles for achieving training and test dataset quality for structured datasets in data science and machine learning. The garbage-in, garbage out principle mo"
+      "distance": 0.4578390121459961,
+      "content_preview": {
+        "index": 53416,
+        "content_preview": "VACUUM  is a set of normative guidance principles for achieving training and test dataset quality for structured datasets in data science and machine learning. The garbage-in, garbage out principle mo",
+        "distance": 0.4578390121459961
+      }
     },
     {
       "vector_index": 16847,
-      "distance": 0.4581047296524048,
-      "title": "Neural network (machine learning)",
-      "content_preview": "In machine learning, a neural network (also artificial neural network or neural net, abbreviated ANN or NN) is a model inspired by the structure and function of biological neural networks in animal br"
+      "distance": 0.45810478925704956,
+      "content_preview": {
+        "index": 16847,
+        "content_preview": "In machine learning, a neural network (also artificial neural network or neural net, abbreviated ANN or NN) is a model inspired by the structure and function of biological neural networks in animal br",
+        "distance": 0.45810478925704956
+      }
     }
   ],
-  "rag_prompt": "Based on the following context documents, answer the question.\n\nContext Documents:\n[1] Title: Cosine similarity\nContent: In data analysis, cosine similarity is a measure of similarity between two non-zero vectors defined in an inner product space. Cosine similarity is the cosine of the angle between the vectors; that is, it is the dot product of the vectors divided by the product of their lengths. It follows that the cosine similarity does not depend on the magnitudes of the vectors, but only on their angle. The cosine similarity always belongs to the interval formula_1 For example, two proportional vectors have a\n\n[2] Title: Sequence\nContent: In mathematics, a sequence is an enumerated collection of objects in which repetitions are allowed and order matters. Like a set, it contains members (also called \"elements\", or \"terms\"). The number of elements (possibly infinite) is called the \"length\" of the sequence. Unlike a set, the same elements can appear multiple times at different positions in a sequence, and unlike a set, the order does matter. Formally, a sequence can be defined as a function from natural numbers (the positions of ele\n\n[3] Title: Data\nContent: Data ( , ) are a collection of discrete or continuous values that convey information, describing the quantity, quality, fact, statistics, other basic units of meaning, or simply sequences of symbols that may be further interpreted formally. A datum is an individual value in a collection of data. Data are usually organized into structures such as tables that provide additional context and meaning, and may themselves be used as data in larger structures. Data may be used as variables in a computat\n\n[4] Title: Mnemonic\nContent: A mnemonic device ( ) or memory device is any learning technique that aids information retention or retrieval in the human memory, often by associating the information with something that is easier to remember.\nIt makes use of elaborative encoding, retrieval cues and imagery as specific tools to encode information in a way that allows for efficient storage and retrieval. It aids original information in becoming associated with something more accessible or meaningful\u2014which in turn provides better\n\n[5] Title: Lists of films\nContent: This is a list of film lists.\nBy title.\n&lt;includeonly&gt;&lt;/includeonly&gt;\nThis is an alphabetical list of film articles (or sections within articles about films). It includes made for television films. See the talk page in for the method of indexing used.\nBy year.\nLists of film related events indexed by year of release.\nBy country.\n&lt;br&gt;\n\u2022 \"African films\"&lt;br&gt;\n\u2022 \" 18-0&lt;br&gt;\n&lt;br&gt;\nNorth Africa&lt;br&gt;\n 1-0&lt;br&gt;\n&lt;br&gt;\n\u2022 \" 0-2&lt;br&gt;\n&lt;br&gt;\n 7-67&lt;br&g\n\n[6] Title: ELMo\nContent: ELMo (embeddings from language model) is a word embedding method for representing a sequence of words as a corresponding sequence of vectors. It was created by researchers at the Allen Institute for Artificial Intelligence, and University of Washington and first released in February, 2018. It is a bidirectional LSTM which takes character-level as inputs and produces word-level embeddings, trained on a corpus of about 30 million sentences and 1 billion words.\nThe architecture of ELMo accomplishes\n\n[7] Title: List of lists of lists\nContent: This list of lists of lists is a list of articles that are lists of other list articles. Each of the pages linked here is an index to multiple lists on a topic.\n\n[8] Title: DOGMA\nContent: DOGMA, short for \"Developing Ontology-Grounded Methods and Applications\", is the name of research project in progress at Vrije Universiteit Brussel's STARLab, Semantics Technology and Applications Research Laboratory. It is an internally funded project, concerned with the more general aspects of extracting, storing, representing and browsing information.\nMethodological Root.\nDOGMA, as a dialect of the fact-based modeling approach, has its root in database semantics and model theory. It adheres t\n\n[9] Title: VACUUM\nContent: VACUUM\n is a set of normative guidance principles for achieving training and test dataset quality for structured datasets in data science and machine learning. The garbage-in, garbage out principle motivates a solution to the problem of data quality but does not offer a specific solution. Unlike the majority of the ad-hoc data quality assessment metrics often used by practitioners VACUUM specifies qualitative principles for data quality management and serves as a basis for defining more detailed\n\n[10] Title: Neural network (machine learning)\nContent: In machine learning, a neural network (also artificial neural network or neural net, abbreviated ANN or NN) is a model inspired by the structure and function of biological neural networks in animal brains.\nA neural network consists of connected units or nodes called \"artificial neurons\", which loosely model the neurons in the brain. Artificial neuron models that mimic biological neurons more closely have also been recently investigated and shown to significantly improve performance. These are co\n\nQuestion: What is machine learning?\n\nAnswer:",
-  "llm_response": "[LLM Response Placeholder]\n\nPrompt length: 5139 characters\n\nThis would call an LLM API (OpenAI, Anthropic, etc.) with the prompt above."
+  "rag_prompt": "Based on the following context documents, answer the question.\n\nContext Documents:\n[1] Content: In data analysis, cosine similarity is a measure of similarity between two non-zero vectors defined in an inner product space. Cosine similarity is the cosine of the angle between the vectors; that is, it is the dot product of the vectors divided by the product of their lengths. It follows that the cosine similarity does not depend on the magnitudes of the vectors, but only on their angle. The cosine similarity always belongs to the interval formula_1 For example, two proportional vectors have a cosine similarity of +1, two orthogonal vectors have a similarity of 0, and two opposite vectors have a similarity of \u00e21. In some contexts, the component values of the vectors cannot be negative, in which case the cosine similarity is bounded in formula_2. For example, in information retrieval and text mining, each word is assigned a different coordinate and a document is represented by the vector of the numbers of occurrences of each word in the document. Cosine similarity then gives a useful measure of how similar t\n\n[2] Content: In mathematics, a sequence is an enumerated collection of objects in which repetitions are allowed and order matters. Like a set, it contains members (also called \"elements\", or \"terms\"). The number of elements (possibly infinite) is called the \"length\" of the sequence. Unlike a set, the same elements can appear multiple times at different positions in a sequence, and unlike a set, the order does matter. Formally, a sequence can be defined as a function from natural numbers (the positions of elements in the sequence) to the elements at each position. The notion of a sequence can be generalized to an indexed family, defined as a function from an \"arbitrary\" index set. For example, (M, A, R, Y) is a sequence of letters with the letter \"M\" first and \"Y\" last. This sequence differs from (A, R, M, Y). Also, the sequence (1, 1, 2, 3, 5, 8), which contains the number 1 at two different positions, is a valid sequence. Sequences can be \"finite\", as in these examples, or \"infinite\", such as the sequence of all even pos\n\n[3] Content: Data ( , ) are a collection of discrete or continuous values that convey information, describing the quantity, quality, fact, statistics, other basic units of meaning, or simply sequences of symbols that may be further interpreted formally. A datum is an individual value in a collection of data. Data are usually organized into structures such as tables that provide additional context and meaning, and may themselves be used as data in larger structures. Data may be used as variables in a computational process. Data may represent abstract ideas or concrete measurements. Data are commonly used in scientific research, economics, and virtually every other form of human organizational activity. Examples of data sets include price indices (such as the consumer price index), unemployment rates, literacy rates, and census data. In this context, data represent the raw facts and figures from which useful information can be extracted. Data are collected using techniques such as measurement, observation, query, or analysi\n\n[4] Content: A mnemonic device ( ) or memory device is any learning technique that aids information retention or retrieval in the human memory, often by associating the information with something that is easier to remember. It makes use of elaborative encoding, retrieval cues and imagery as specific tools to encode information in a way that allows for efficient storage and retrieval. It aids original information in becoming associated with something more accessible or meaningful\u00e2which in turn provides better retention of the information. Commonly encountered mnemonics are often used for lists and in auditory form such as short poems, acronyms, initialisms or memorable phrases. They can also be used for other types of information and in visual or kinesthetic forms. Their use is based on the observation that the human mind more easily remembers spatial, personal, surprising, physical, sexual, humorous and otherwise \"relatable\" information rather than more abstract or impersonal forms of information. Ancient Greeks and Roman\n\n[5] Content: This is a list of film lists. By title. &lt;includeonly&gt;&lt;/includeonly&gt; This is an alphabetical list of film articles (or sections within articles about films). It includes made for television films. See the talk page in for the method of indexing used. By year. Lists of film related events indexed by year of release. By country. &lt;br&gt; \u00e2 \"African films\"&lt;br&gt; \u00e2 \" 18-0&lt;br&gt; &lt;br&gt; North Africa&lt;br&gt;  1-0&lt;br&gt; &lt;br&gt; \u00e2 \" 0-2&lt;br&gt; &lt;br&gt;  7-67&lt;br&gt;  9-279&lt;br&gt;  0-5&lt;br&gt; &lt;br&gt; \u00e2 \"Egyptian films\"&lt;br&gt; &lt;br&gt;  0-3&lt;br&gt;  7-125&lt;br&gt;  0-4&lt;br&gt; &lt;br&gt; \u00e2 \"Moroccan films\"&lt;br&gt; &lt;br&gt;  3-7&lt;br&gt;  8-73&lt;br&gt; &lt;br&gt; West Africa&lt;br&gt;  0-5&lt;br&gt;  0-5&lt;br&gt;  1-8&lt;br&gt;  5-44&lt;br&gt;  0-9&lt;br&gt;  2-9&lt;br&gt;  0-5&lt;br&gt;  0-1&lt;br&gt;  0-1&lt;br&gt;  8-80&lt;br&gt;  0-2&lt;br&gt;  3-7&lt;br&gt;  0-4&lt;br&gt;  2-18&lt;br&gt;  0-2&lt;br&gt;  0-5&lt;br&gt;  3-23&lt;br&gt;  0-14&lt;br&gt;\n\n[6] Content: ELMo (embeddings from language model) is a word embedding method for representing a sequence of words as a corresponding sequence of vectors. It was created by researchers at the Allen Institute for Artificial Intelligence, and University of Washington and first released in February, 2018. It is a bidirectional LSTM which takes character-level as inputs and produces word-level embeddings, trained on a corpus of about 30 million sentences and 1 billion words. The architecture of ELMo accomplishes a contextual understanding of tokens. Deep contextualized word representation is useful for many natural language processing tasks, such as coreference resolution and polysemy resolution. ELMo was historically important as a pioneer of self-supervised generative pretraining followed by fine-tuning, where a large model is trained to reproduce a large corpus, then the large model is augmented with additional task-specific weights and fine-tuned on supervised task data. It was an instrumental step in the evolution toward\n\n[7] Content: This list of lists of lists is a list of articles that are lists of other list articles. Each of the pages linked here is an index to multiple lists on a topic.\n\n[8] Content: DOGMA, short for \"Developing Ontology-Grounded Methods and Applications\", is the name of research project in progress at Vrije Universiteit Brussel's STARLab, Semantics Technology and Applications Research Laboratory. It is an internally funded project, concerned with the more general aspects of extracting, storing, representing and browsing information. Methodological Root. DOGMA, as a dialect of the fact-based modeling approach, has its root in database semantics and model theory. It adheres to the fact-based information management methodology towards Conceptualization and 100% principle of ISO TR9007. The DOGMA methodological principles include: Technical introduction. DOGMA is an ontology approach and framework that is not restricted to a particular representation language. This approach has some distinguishing characteristics that make it different from traditional ontology approaches such as (i) its groundings in the linguistic representations of knowledge and (ii) the methodological separation of the d\n\n[9] Content: VACUUM  is a set of normative guidance principles for achieving training and test dataset quality for structured datasets in data science and machine learning. The garbage-in, garbage out principle motivates a solution to the problem of data quality but does not offer a specific solution. Unlike the majority of the ad-hoc data quality assessment metrics often used by practitioners VACUUM specifies qualitative principles for data quality management and serves as a basis for defining more detailed quantitative metrics of data quality. VACUUM is an acronym that stands for:\n\n[10] Content: In machine learning, a neural network (also artificial neural network or neural net, abbreviated ANN or NN) is a model inspired by the structure and function of biological neural networks in animal brains. A neural network consists of connected units or nodes called \"artificial neurons\", which loosely model the neurons in the brain. Artificial neuron models that mimic biological neurons more closely have also been recently investigated and shown to significantly improve performance. These are connected by \"edges\", which model the synapses in the brain. Each artificial neuron receives signals from connected neurons, then processes them and sends a signal to other connected neurons. The \"signal\" is a real number, and the output of each neuron is computed by some non-linear function of the sum of its inputs, called the \"activation function\". The strength of the signal at each connection is determined by a \"weight\", which adjusts during the learning process. Typically, neurons are aggregated into layers. Differen\n\nQuestion: What is machine learning?\n\nAnswer:",
+  "llm_response": "[LLM Response Placeholder]\n\nPrompt length: 9204 characters\n\nThis would call an LLM API (OpenAI, Anthropic, etc.) with the prompt above."
 }

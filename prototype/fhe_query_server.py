@@ -510,6 +510,7 @@ def main():
     print(f"Output directory: {args.output_dir}")
     print(f"{'='*70}")
 
+
     # Run the built executable
     print("\n=== Running database server ===")
     stdout, stderr, code = run_built_executable(

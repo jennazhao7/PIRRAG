@@ -142,8 +142,8 @@ def uniformize_pickle_with_stats(
         #print(list(entrydict.values())[0])
         entries = []
         for value in entrydocs:
-            if (len(value.page_content) > 2048):
-                entries.append(value.page_content[0:2048])
+            if (len(value.page_content) > 64):
+                entries.append(value.page_content[0:64])
             else:
                 entries.append(value.page_content)
         print(entries[0])
@@ -266,7 +266,7 @@ if __name__ == "__main__":
         #'/home/ajanusze/wiki-pir-rag/index.pkl',
         #'/home/ajanusze/wiki-pir-rag/uniform_index.pkl',
         '/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/index.pkl',
-        '/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/uniform_index_2048.txt',
+        '/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/uniform_index.txt',
         target_size=None,  # Will use max size
         pad_value=" "
     )

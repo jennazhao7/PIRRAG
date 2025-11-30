@@ -15,6 +15,7 @@ import numpy as np
 from pathlib import Path
 from typing import Union, Tuple
 import tenseal as ts
+import re
 
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
@@ -479,7 +480,10 @@ def main():
             "/Users/antoniajanuszewicz/GolandProjects/Piano-PIR-RAG/client_exe",
             args=["-ip", "localhost:50051", "-thread", "1", "-input", "/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/decrypted_results/top_k_results.json"]
         )
-        print(f"Output:\n{stderr}")
+        #print(f"Output:\n{stderr}")
+        indices, vectors = extract_query_results(stderr)
+        print(indices)
+        print(vectors)
         
         print(f"\n{'='*70}")
         print("Summary")
@@ -536,6 +540,54 @@ def main():
     print(f"  - Encrypted norm: {norm_file}")
     print(f"  - Metadata: {metadata_file}")
     print(f"{'='*70}")
+
+
+def extract_query_results(log_string):
+    """
+    Extract indices and vector arrays from query result log strings.
+
+    Parameters:
+    -----------
+    log_string : str
+        The log string containing query results
+
+    Returns:
+    --------
+    tuple: (indices, vectors)
+        indices: list of int - the extracted indices
+        vectors: np.ndarray - array of shape (n, vector_dim) containing the vectors
+    """
+    indices = []
+    vectors = []
+
+    # Split into lines
+    lines = log_string.strip().split('\n')
+
+    for line in lines:
+        # Look for lines that contain "Final query result at index"
+        if "Final query result at index" in line:
+            # Extract the index number
+            match = re.search(r'index (\d+):', line)
+            if match:
+                index = int(match.group(1))
+
+                # Extract the vector (everything inside the square brackets)
+                vector_match = re.search(r'\[(.*?)\]', line)
+                if vector_match:
+                    vector_str = vector_match.group(1)
+                    # Split by whitespace and convert to floats
+                    vector = np.array([float(x) for x in vector_str.split()])
+
+                    indices.append(index)
+                    vectors.append(vector)
+
+    # Convert list of vectors to numpy array
+    if vectors:
+        vectors = np.array(vectors)
+    else:
+        vectors = np.array([])
+
+    return indices, vectors
 
 
 if __name__ == "__main__":
