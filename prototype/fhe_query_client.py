@@ -496,7 +496,8 @@ def main():
         stdout, stderr, code = run_built_executable(
             "/Users/antoniajanuszewicz/GolandProjects/Piano-PIR-RAG/client_exe",
             args=["-ip", "localhost:50052", "-thread", "1", "-input",
-                  "/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/decrypted_results/top_k_results.json"],
+                  "/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/decrypted_results/top_k_results.json",
+                  "-extra_input", "/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/prototype/data/lists.json"],
             timeout=60
         )
         _, indices, vectors = extract_query_results(stderr)
