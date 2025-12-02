@@ -15,6 +15,9 @@ import numpy as np
 from pathlib import Path
 from typing import Union, Tuple
 import tenseal as ts
+import re
+from typing import List, Tuple, Dict
+import faiss
 
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
@@ -473,20 +476,72 @@ def main():
             Path(args.results_dir)
         )
 
-        # Run the built executable
-        print("\n=== Running client query ===")
-        stdout, stderr, code = run_built_executable(
-            "/Users/antoniajanuszewicz/GolandProjects/Piano-PIR-RAG/client_exe",
-            args=["-ip", "localhost:50051", "-thread", "1", "-input", "/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/decrypted_results/top_k_results.json"]
-        )
-        print(f"Output:\n{stderr}")
-        
         print(f"\n{'='*70}")
         print("Summary")
         print(f"{'='*70}")
         print(f"Decrypted {len(top_k_distances)} top distances")
         print(f"Results saved to: {args.results_dir}")
         print(f"{'='*70}")
+
+        # Step 4: Global top-k
+        global_k = 10
+        print(f"\n{'=' * 70}")
+        print(f"Step 4: Global top-{global_k} selection...")
+
+        query_vector = embed_query(args.query)
+
+        # run executable
+        # retrieve info from it
+
+        stdout, stderr, code = run_built_executable(
+            "/Users/antoniajanuszewicz/GolandProjects/Piano-PIR-RAG/client_exe",
+            args=["-ip", "localhost:50052", "-thread", "1", "-input",
+                  "/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/decrypted_results/top_k_results.json",
+                  "-extra_input", "/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/prototype/data/lists.json"],
+            timeout=60
+        )
+        _, indices, vectors = extract_query_results(stderr)
+
+        top_k_results = pir_global_top_k(
+            indices,
+            query_vector,
+            vectors,
+            top_k=global_k,
+            use_faiss=True
+        )
+        """
+        top_k_results = global_top_k(
+            all_candidates,
+            query_vector,
+            all_vectors,
+            top_k=global_k,
+            use_faiss=use_faiss_for_knn
+        )"""
+        top_k_indices = [idx for idx, _ in top_k_results]
+        top_k_distances = [dist for _, dist in top_k_results]
+
+        save_top_k_results(np.array(top_k_distances), np.array(top_k_indices),
+                               Path("/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/prototype/ground_truth"))
+
+        print(f"✓ Selected top-{len(top_k_results)} vectors:")
+        for i, (idx, dist) in enumerate(top_k_results, 1):
+            print(f"  {i}. Vector {idx}: distance = {dist:.4f}")
+        # replace this step
+
+        # Step 5: Map vector IDs → documents
+        print(f"\n{'=' * 70}")
+        print("Step 5: Mapping vector IDs to documents...")
+        # ====================================================================
+        # DOCUMENT/PICKLE INTERACTION: Getting actual document content
+        # ====================================================================
+        # - Translates vector indices → Document objects via docstore
+        # - Documents contain page_content (text) and metadata (title)
+        # documents = get_documents_by_indices(faiss_vectorstore, top_k_indices)
+        documents = pir_get_documents_by_indices(top_k_indices)
+        print(documents)
+        print(top_k_indices)
+        print(f"✓ Retrieved {len(documents)} documents")
+
         return
     
     # Encryption mode - query is required
@@ -537,6 +592,226 @@ def main():
     print(f"  - Metadata: {metadata_file}")
     print(f"{'='*70}")
 
+
+def extract_query_results(log_string):
+    """
+    Extract cluster IDs, indices, and vector arrays from query result log strings.
+
+    Parameters:
+    -----------
+    log_string : str
+        The log string containing query results with cluster information
+
+    Returns:
+    --------
+    tuple: (cluster_ids, indices, vectors)
+        cluster_ids: list of int - the cluster IDs for each query result
+        indices: list of int - the extracted indices
+        vectors: np.ndarray - array of shape (n, vector_dim) containing the vectors
+    """
+    cluster_ids = []
+    indices = []
+    vectors = []
+
+    # Split into lines
+    lines = log_string.strip().split('\n')
+
+    for line in lines:
+        # Look for lines that contain "Final query result from cluster"
+        if "Final query result from cluster" in line:
+            # Extract the cluster ID and index
+            # Pattern: "from cluster <cluster_id> at index <index>:"
+            match = re.search(r'from cluster (\d+) at index (\d+):', line)
+            if match:
+                cluster_id = int(match.group(1))
+                index = int(match.group(2))
+
+                # Extract the vector (everything inside the square brackets)
+                vector_match = re.search(r'\[(.*?)\]', line)
+                if vector_match:
+                    vector_str = vector_match.group(1)
+                    # Split by whitespace and convert to floats
+                    vector = np.array([float(x) for x in vector_str.split()])
+
+                    cluster_ids.append(cluster_id)
+                    indices.append(index)
+                    vectors.append(vector)
+
+    # Convert list of vectors to numpy array
+    if vectors:
+        vectors = np.array(vectors)
+    else:
+        vectors = np.array([])
+
+    return cluster_ids, indices, vectors
+
+def pir_get_documents_by_indices(
+        vector_indices: List[int]
+) -> List[str]:
+    stdout, stderr, code = run_built_executable(
+        "/Users/antoniajanuszewicz/GolandProjects/Piano-PIR-RAG/client_exe",
+        args=["-ip", "localhost:50051", "-thread", "1", "-input",
+              "/Users/antoniajanuszewicz/PycharmProjects/PIANO-RAG/prototype/ground_truth/ground_truth.json"],
+        timeout=60
+    )
+    #print(stderr)
+    indices, text = extract_text_query_results(stderr)
+    documents = text
+
+    # ====================================================================
+    # DOCUMENT/PICKLE INTERACTION: Accessing docstore
+    # ====================================================================
+    # - docstore contains the actual document text and metadata
+    # - Loaded from index.pkl file (pickle format)
+    # - docstore._dict maps doc_id → Document object
+
+
+    return documents
+
+def save_top_k_results(
+            top_k_distances: np.ndarray,
+            top_k_indices: np.ndarray,
+            output_path: Path,
+            centroids_path: Path = None
+    ):
+        """
+        Save decrypted top-k results to files.
+
+        Args:
+            top_k_distances: Top-k distances (sorted)
+            top_k_indices: Top-k centroid indices (sorted)
+            output_path: Output directory
+            centroids_path: Optional path to centroids.npy for additional info
+        """
+        output_path = Path(output_path)
+        output_path.mkdir(parents=True, exist_ok=True)
+
+        # Save distances and indices
+        results = {
+            "top_k": len(top_k_distances),
+            "distances": top_k_distances.tolist(),
+            "centroid_indices": top_k_indices.tolist(),
+            "min_distance": float(top_k_distances.min()),
+            "max_distance": float(top_k_distances.max()),
+            "mean_distance": float(top_k_distances.mean())
+        }
+
+        results_file = output_path / "ground_truth.json"
+        with open(results_file, 'w') as f:
+            json.dump(results, f, indent=2)
+        print(f"✓ Saved results to {results_file}")
+
+        # Save as numpy arrays for easy loading
+        # np.save(output_path / "top_k_distances.npy", top_k_distances)
+        # np.save(output_path / "top_k_indices.npy", top_k_indices)
+        # print(f"✓ Saved numpy arrays to {output_path}")
+
+        # Print summary
+        print(f"\nTop-{len(top_k_distances)} Results:")
+        print(f"  Best match: Centroid {top_k_indices[0]} (distance: {top_k_distances[0]:.4f})")
+        print(f"  Worst match: Centroid {top_k_indices[-1]} (distance: {top_k_distances[-1]:.4f})")
+
+        return results_file
+
+def extract_text_query_results(log_string):
+    """
+    Extract indices and text results from query result log strings.
+
+    Parameters:
+    -----------
+    log_string : str
+        The log string containing text query results
+
+    Returns:
+    --------
+    tuple: (indices, texts)
+        indices: list of int - the extracted indices
+        texts: list of str - the corresponding text results
+    """
+    indices = []
+    texts = []
+
+    # Split into lines
+    lines = log_string.strip().split('\n')
+
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+
+        # Look for lines that contain "Final query result at index"
+        if "Final query result at index" in line:
+            # Extract the index number
+            match = re.search(r'at index (\d+):', line)
+            if match:
+                index = int(match.group(1))
+
+                # Extract the text after the colon
+                # Split at ': ' and take everything after
+                parts = line.split(': ', 1)
+                if len(parts) == 2:
+                    text = parts[1].strip()
+
+                    indices.append(index)
+                    texts.append(text)
+
+        i += 1
+
+    return indices, texts
+
+def pir_global_top_k(
+        indexes: List[str],
+        query_vector: np.ndarray,
+        all_vectors: np.ndarray,
+        top_k: int = 10,
+        use_faiss: bool = True
+) -> List[Tuple[int, float]]:
+    """
+    Merge all candidates and do a global top-k sort.
+
+    Can use pure NumPy (default) or FAISS IndexFlatL2 for KNN.
+
+    Args:
+        candidates: List of (vector_index, distance) tuples
+        query_vector: Query embedding vector
+        all_vectors: All document vectors
+        top_k: Number of top results to return
+        use_faiss: Whether to use FAISS IndexFlatL2 (vs pure NumPy)
+
+    Returns:
+        Top-k (vector_index, distance) tuples sorted by distance
+    """
+    if use_faiss and len(indexes) > 0:
+        # ====================================================================
+        # FAISS INTERACTION: Building temporary FAISS IndexFlatL2 for KNN
+        # ====================================================================
+        # - Creates a small FAISS index on candidate vectors
+        # - Uses FAISS search() for efficient distance computation
+        # - Alternative to pure NumPy sorting (faster for large candidate sets)
+        candidate_indices = indexes
+        candidate_vectors = all_vectors
+
+        # Create FAISS index
+        dim = candidate_vectors.shape[1]
+        index = faiss.IndexFlatL2(dim)
+        index.add(candidate_vectors.astype('float32'))
+
+        # Query
+        query_reshaped = query_vector.reshape(1, -1).astype('float32')
+        distances, indices = index.search(query_reshaped, k=top_k)
+
+        # Map back to original indices
+        results = [
+            (candidate_indices[idx], float(dist))
+            for idx, dist in zip(indices[0], distances[0])
+        ]
+        return results
+    return [(0,0)]
+
+def embed_query(query_text: str) -> np.ndarray:
+    """Embed query → vector q."""
+    embeddings = PromptedBGE(model_name="BAAI/bge-base-en")
+    query_vec = embeddings.embed_query(query_text)
+    return np.array(query_vec, dtype=np.float32)
 
 if __name__ == "__main__":
     main()

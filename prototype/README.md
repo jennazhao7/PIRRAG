@@ -146,3 +146,21 @@ client = FHEQueryClient(
 
 See parent repository for license information.
 
+## PIR Readme
+
+**Guide:**
+Generate uniform_index_1024.txt by running pickle_processor.py
+and change to correct path on line 268,269
+
+Generate faiss.json by running faiss_processor.py with command line arguments:
+--input ../index.faiss --output ../faiss.txt --format csv
+
+Run server_exe twice with the following command line arguments:
+-port 50051 -database /path/to/uniform_index_1024.txt
+-port 50052 -database /path/to/faiss.json
+
+Change the correct paths in:
+Line 496 of fhe_query_client.py with correct path
+Line 650 of fhe_query_client.py
+
+Go ham
