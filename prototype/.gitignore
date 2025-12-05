@@ -1,0 +1,49 @@
+# FHE Context (contains secret keys - never commit!)
+fhe_context/
+context.json
+context_public.json
+
+# Encrypted data
+encrypted_queries/
+encrypted_distances/
+decrypted_results/
+workflow_encrypted_queries/
+workflow_encrypted_distances/
+workflow_decrypted_results/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data files
+*.npy
+*.pkl
+*.faiss
+*.bin
+
+# Large workflow outputs (can be regenerated)
+workflow_*/
+
+# Logs
+*.log
+
+
