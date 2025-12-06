@@ -818,8 +818,8 @@ def extract_text_query_results(log_string):
                     text = [parts[1].strip()]
                 for elements in query_id_list:
                     if indices.get(elements) is None:
-                        indices[elements] = [text]
-                        texts[elements] = [index]
+                        indices[elements] = [index]
+                        texts[elements] = [text]
                     else:
                         indices[elements].append(index)
                         texts[elements].append(text)
