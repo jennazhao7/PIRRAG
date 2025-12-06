@@ -701,15 +701,15 @@ def parse_query_results(log_text):
 
     return query_embeddings, query_indices
 
-def pir_get_documents_by_indices() -> List[str]:
+def pir_get_documents_by_indices() -> Dict[int,str]:
     stdout, stderr, code = run_built_executable(
-        "/home/ajanusze/Piano-PIR-RAG/executables-dM90t0OyKl/___go_build_easypir_client_batch",
+        "/home/ajanusze/Piano-PIR-RAG/executables-duY1Uhgqfu/___go_build_easypir_client_batch",
         args=["-ip", "localhost:50051", "-thread", "1", "-input",
               "/home/ajanusze/PIANO-RAG/prototype/ground_truth/ground_truth.json", "-batch", "true"],
         timeout=240
     )
-    print(stderr)
     indices, text = extract_text_query_results(stderr)
+    print(indices)
     documents = text
 
     # ====================================================================
@@ -718,8 +718,6 @@ def pir_get_documents_by_indices() -> List[str]:
     # - docstore contains the actual document text and metadata
     # - Loaded from index.pkl file (pickle format)
     # - docstore._dict maps doc_id → Document object
-
-
     return documents
 
 def save_top_k_results(
@@ -792,33 +790,41 @@ def extract_text_query_results(log_string):
         indices: list of int - the extracted indices
         texts: list of str - the corresponding text results
     """
-    indices = []
-    texts = []
+    indices = {}
+    texts = {}
 
     # Split into lines
     lines = log_string.strip().split('\n')
 
-    i = 0
-    while i < len(lines):
-        line = lines[i]
-
-        # Look for lines that contain "Final query result at index"
-        if "Final query result at index" in line:
-            # Extract the index number
-            match = re.search(r'at index (\d+):', line)
+    # Pattern to match lines like: "Final query result at query 83 at index 2955: [vector values]"
+    pattern = r'Final query result from query \[([\d\s]+)\] at index (\d+):'
+    for line in lines:
+        if "Final query result" in line:
+            #print(line)
+            match = re.search(pattern, line)
             if match:
-                index = int(match.group(1))
+                # Parse query ID(s) - can be single or multiple
+                query_ids_str = match.group(1).strip()
+                #print(query_ids_str)
+                query_id_list = [int(x) for x in query_ids_str.split()]
+
+                # If only one query ID, use it as single int
+                index = int(match.group(2))
 
                 # Extract the text after the colon
-                # Split at ': ' and take everything after
+                text = ''
                 parts = line.split(': ', 1)
                 if len(parts) == 2:
-                    text = parts[1].strip()
+                    text = [parts[1].strip()]
+                for elements in query_id_list:
+                    if indices.get(elements) is None:
+                        indices[elements] = [text]
+                        texts[elements] = [index]
+                    else:
+                        indices[elements].append(index)
+                        texts[elements].append(text)
 
-                    indices.append(index)
-                    texts.append(text)
-
-        i += 1
+                #print(f"Query at index {query_ids_str}: {text}")
 
     return indices, texts
 
