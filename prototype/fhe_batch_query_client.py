@@ -332,7 +332,7 @@ class FHEQueryClient:
             with open(dist_file, 'rb') as f:
                 encrypted_bytes = f.read()
             
-            # Decrypt
+            # Decrypt pls
             encrypted_distance = ts.ckks_vector_from(self.context, encrypted_bytes)
             distance_value = encrypted_distance.decrypt()[0]  # Decrypt and get scalar
             all_distances.append(distance_value)
