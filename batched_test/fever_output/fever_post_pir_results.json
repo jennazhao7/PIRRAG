@@ -1,0 +1,53 @@
+{
+  "total_queries": 200,
+  "metrics": {
+    "k1": {
+      "evidence_recall": 0.0,
+      "precision": 0.0,
+      "entity_recall": 0.0,
+      "mrr": 0.0,
+      "avg_docs_with_evidence": 0.0,
+      "avg_found_entities": 0.0
+    },
+    "k5": {
+      "evidence_recall": 0.01,
+      "precision": 0.002,
+      "entity_recall": 0.01,
+      "mrr": 0.002,
+      "avg_docs_with_evidence": 0.01,
+      "avg_found_entities": 0.01
+    },
+    "k10": {
+      "evidence_recall": 0.01,
+      "precision": 0.002,
+      "entity_recall": 0.01,
+      "mrr": 0.002,
+      "avg_docs_with_evidence": 0.02,
+      "avg_found_entities": 0.01
+    },
+    "k20": {
+      "evidence_recall": 0.02,
+      "precision": 0.0025,
+      "entity_recall": 0.015,
+      "mrr": 0.0025263157894736842,
+      "avg_docs_with_evidence": 0.05,
+      "avg_found_entities": 0.02
+    },
+    "k50": {
+      "evidence_recall": 0.07,
+      "precision": 0.0031999999999999997,
+      "entity_recall": 0.065,
+      "mrr": 0.003946004796119213,
+      "avg_docs_with_evidence": 0.16,
+      "avg_found_entities": 0.07
+    },
+    "k100": {
+      "evidence_recall": 0.08,
+      "precision": 0.0024000000000000002,
+      "entity_recall": 0.075,
+      "mrr": 0.004057115907230324,
+      "avg_docs_with_evidence": 0.24,
+      "avg_found_entities": 0.08
+    }
+  }
+}
