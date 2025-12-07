@@ -153,7 +153,7 @@ Generate uniform_index_1024.txt by running pickle_processor.py
 and change to correct path on line 268,269
 
 Generate faiss.json by running faiss_processor.py with command line arguments:
---input ../index.faiss --output ../faiss.txt --format csv
+--input ../index.faiss --batch-size 1 --output ../faiss.json --format json
 
 Run server_exe twice with the following command line arguments:
 -port 50051 -database /path/to/uniform_index_1024.txt

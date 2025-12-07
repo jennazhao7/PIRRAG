@@ -366,7 +366,8 @@ if __name__ == "__main__":
         success, exe_path, msg = build_go_module(
             project_dir,
             #output_name="server_exe"
-            output_name="client_exe"
+            #output_name="client_exe"
+            output_name="batched_client_exe"
         )
 
         if success:
