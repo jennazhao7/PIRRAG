@@ -2,7 +2,9 @@
 
 # Core dependencies
 numpy>=1.25.0
-tenseal>=0.3.0
+
+# OpenFHE is provided by C++ binaries under openfhe_core/.
+# TenSEAL is optional now and only needed when using --backend tenseal.
 
 # Embeddings
 langchain-community>=0.0.20
