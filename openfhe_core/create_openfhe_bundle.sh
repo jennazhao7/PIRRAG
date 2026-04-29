@@ -19,7 +19,6 @@ copy_file() {
 
 copy_file "openfhe_core/CMakeLists.txt"
 copy_file "openfhe_core/README.md"
-copy_file "openfhe_core/BUNDLE_MANIFEST.md"
 copy_file "openfhe_core/include/io_utils.h"
 copy_file "openfhe_core/src/io_utils.cpp"
 copy_file "openfhe_core/src/openfhe_keygen.cpp"
