@@ -1,6 +1,7 @@
 #include "io_utils.h"
 
 #include <fstream>
+#include <filesystem>
 #include <iostream>
 #include <regex>
 #include <sstream>
@@ -61,6 +62,7 @@ ContextBundlePaths ResolveContextPaths(const std::string& contextDir) {
   paths.secretKeyFile = contextDir + "/secret_key.bin";
   paths.evalMultKeyFile = contextDir + "/eval_mult_keys.bin";
   paths.evalSumKeyFile = contextDir + "/eval_sum_keys.bin";
+  paths.evalAutomorphismKeyFile = contextDir + "/eval_automorphism_keys.bin";
   return paths;
 }
 
@@ -272,6 +274,34 @@ void LoadEvalKeys(const ContextBundlePaths& paths) {
           evalSumIn, lbcrypto::SerType::BINARY),
       paths.evalSumKeyFile,
       "Deserialize eval sum keys");
+
+  if (std::filesystem::exists(paths.evalAutomorphismKeyFile) &&
+      std::filesystem::file_size(paths.evalAutomorphismKeyFile) > 0) {
+    std::ifstream evalAutoIn(paths.evalAutomorphismKeyFile, std::ios::binary);
+    if (!evalAutoIn) {
+      throw std::runtime_error("Failed to open eval automorphism key file for reading: " +
+                               paths.evalAutomorphismKeyFile);
+    }
+    CheckSerialize<int>(
+        lbcrypto::CryptoContextImpl<DCRTPoly>::DeserializeEvalAutomorphismKey(
+            evalAutoIn, lbcrypto::SerType::BINARY),
+        paths.evalAutomorphismKeyFile,
+        "Deserialize eval automorphism keys");
+  }
+}
+
+void SaveEvalAutomorphismKeys(
+    const std::string& path,
+    const CryptoContext<DCRTPoly>& cc) {
+  std::ofstream evalAutoOut(path, std::ios::binary);
+  if (!evalAutoOut) {
+    throw std::runtime_error("Failed to open eval automorphism key file for writing: " + path);
+  }
+  CheckSerialize<int>(
+      lbcrypto::CryptoContextImpl<DCRTPoly>::SerializeEvalAutomorphismKey(
+          evalAutoOut, lbcrypto::SerType::BINARY, cc),
+      path,
+      "Serialize eval automorphism keys");
 }
 
 void SaveCiphertext(const std::string& path, const Ciphertext<DCRTPoly>& ct) {

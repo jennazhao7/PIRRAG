@@ -27,6 +27,7 @@ struct ContextBundlePaths {
   std::string secretKeyFile;
   std::string evalMultKeyFile;
   std::string evalSumKeyFile;
+  std::string evalAutomorphismKeyFile;
 };
 
 struct CliArgs {
@@ -58,6 +59,9 @@ CryptoContext<DCRTPoly> LoadContext(const std::string& contextFile);
 PublicKey<DCRTPoly> LoadPublicKey(const std::string& publicKeyFile);
 PrivateKey<DCRTPoly> LoadSecretKey(const std::string& secretKeyFile);
 void LoadEvalKeys(const ContextBundlePaths& paths);
+void SaveEvalAutomorphismKeys(
+    const std::string& path,
+    const CryptoContext<DCRTPoly>& cc);
 void SaveCiphertext(const std::string& path, const Ciphertext<DCRTPoly>& ct);
 Ciphertext<DCRTPoly> LoadCiphertext(const std::string& path);
 
