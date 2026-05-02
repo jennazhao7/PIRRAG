@@ -16,6 +16,7 @@ Core files:
 
 Batched workload files:
 
+- `src/openfhe_batched_workload.cpp`
 - `src/openfhe_encrypt_query_centroid_batched.cpp`
 - `src/openfhe_compute_distances_centroid_batched.cpp`
 - `src/openfhe_decrypt_topk_centroid_batched.cpp`
@@ -59,6 +60,81 @@ Expected binaries include:
 - `openfhe_core/build/bin/openfhe_encrypt_queries_centroid_batched`
 - `openfhe_core/build/bin/openfhe_compute_distances_query_centroid_batched`
 - `openfhe_core/build/bin/openfhe_decrypt_topk_query_centroid_batched`
+
+## One-File Batched Wrapper
+
+Use `src/openfhe_batched_workload.cpp` when handing the batched FHE workflow to a collaborator. It is a self-contained C++ entry point for key generation, encryption, distance computation, and top-k decryption for the two recommended batched paths:
+
+- Centroid batching: one encrypted query against many plaintext centroids.
+- Query+centroid batching: multiple encrypted queries processed together.
+
+This source file includes its own argument parsing, OpenFHE context/key serialization, ciphertext IO, metadata writing, and top-k JSON output. A collaborator can copy this one `.cpp` file into another project and link it against OpenFHE and OpenMP; it does not require `include/io_utils.h`, `src/io_utils.cpp`, or the split batched binary sources.
+
+Compile this file into an executable named `openfhe_batched_workload` using the same OpenFHE include paths and libraries as the rest of the project. The source is intentionally standalone so it can be dropped into the collaborator's PIR build system without also copying the OpenFHE helper library.
+
+The binary keeps the same file formats as the split binaries, so existing benchmark scripts can still read the outputs. Input vectors are whitespace-delimited text files. For matrix input, each row is one vector.
+
+Centroid-batched end-to-end run:
+
+```bash
+openfhe_core/build/bin/openfhe_batched_workload run-centroid \
+  --context-dir /path/to/context_dir \
+  --input-vector /path/to/query.txt \
+  --centroids-file /path/to/centroids.txt \
+  --work-dir /path/to/work_dir \
+  --output-json /path/to/top_k_results.json \
+  --poly-modulus-degree 16384 \
+  --padded-dim 1024 \
+  --centroids-per-ciphertext 8 \
+  --num-threads 20 \
+  --batch-size 1 \
+  --top-k 100
+```
+
+Query+centroid-batched end-to-end run:
+
+```bash
+openfhe_core/build/bin/openfhe_batched_workload run-query-centroid \
+  --context-dir /path/to/context_dir \
+  --input-matrix /path/to/queries.txt \
+  --centroids-file /path/to/centroids.txt \
+  --work-dir /path/to/work_dir \
+  --output-json /path/to/top_k_results.json \
+  --poly-modulus-degree 16384 \
+  --padded-dim 1024 \
+  --queries-per-batch 2 \
+  --centroids-per-batch 4 \
+  --num-threads 20 \
+  --batch-size 1 \
+  --top-k 100
+```
+
+The same binary also exposes step-by-step subcommands for wrappers that want to insert PIR logic between stages:
+
+- `keygen-centroid`, `encrypt-centroid`, `compute-centroid`, `decrypt-centroid`
+- `keygen-query-centroid`, `encrypt-query-centroid`, `compute-query-centroid`, `decrypt-query-centroid`
+
+Run `openfhe_core/build/bin/openfhe_batched_workload help` for the complete command list.
+
+Smoke test used for the one-file wrapper:
+
+```bash
+openfhe_core/build/bin/openfhe_batched_workload run-centroid \
+  --context-dir openfhe_core/one_file_wrapper_smoke/context_centroid \
+  --input-vector openfhe_core/one_file_wrapper_smoke/query.txt \
+  --centroids-file openfhe_core/one_file_wrapper_smoke/centroids.txt \
+  --work-dir openfhe_core/one_file_wrapper_smoke/centroid_run \
+  --output-json openfhe_core/one_file_wrapper_smoke/centroid_topk.json \
+  --poly-modulus-degree 16384 \
+  --padded-dim 8 \
+  --centroids-per-ciphertext 2 \
+  --num-threads 2 \
+  --batch-size 1 \
+  --top-k 2 \
+  --security-level none
+```
+
+The same test also passed for `run-query-centroid` with two query rows and four centroid rows. The expected nearest centroids were recovered for both queries.
 
 ## Which Path To Use
 
