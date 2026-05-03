@@ -74,6 +74,38 @@ Compile this file into an executable named `openfhe_batched_workload` using the 
 
 The binary keeps the same file formats as the split binaries, so existing benchmark scripts can still read the outputs. Input vectors are whitespace-delimited text files. For matrix input, each row is one vector.
 
+Sample input files are in `openfhe_core/sample_inputs/`:
+
+- `centroids_4d.txt`: four 4-dimensional centroid rows.
+- `query_4d.txt`: one 4-dimensional query vector for `run-centroid`.
+- `queries_4d.txt`: two 4-dimensional query rows for `run-query-centroid`.
+
+The text format is intentionally simple:
+
+```text
+1 0 0 0
+0 1 0 0
+0 0 1 0
+1 1 0 0
+```
+
+To convert a NumPy centroid matrix to this format:
+
+```bash
+python - <<'PY'
+import numpy as np
+
+centroids = np.load("/path/to/centroids.npy")
+np.savetxt("/path/to/centroids.txt", centroids, fmt="%.9g")
+PY
+```
+
+The real centroid file for the current 4096-centroid workload is:
+
+- `openfhe_core/centroids.txt`
+
+It is already converted to the wrapper format: `4096` rows, `768` whitespace-delimited finite floats per row.
+
 Centroid-batched end-to-end run:
 
 ```bash
@@ -209,7 +241,7 @@ Use this for one encrypted query against many centroids:
 ```bash
 python openfhe_core/benchmark_centroid_batch.py \
   --bin-dir openfhe_core/build/bin \
-  --centroids-file prototype/real_openfhe_tuned/encrypted_distances_bs64b/centroids.txt \
+  --centroids-file openfhe_core/centroids.txt \
   --work-dir openfhe_core/centroid_batch_bench_4096 \
   --poly-modulus-degree 16384 \
   --query-dim 768 \
@@ -235,7 +267,7 @@ Use this when multiple encrypted queries are processed together:
 ```bash
 python openfhe_core/benchmark_query_centroid_batch.py \
   --bin-dir openfhe_core/build/bin \
-  --centroids-file prototype/real_openfhe_tuned/encrypted_distances_bs64b/centroids.txt \
+  --centroids-file openfhe_core/centroids.txt \
   --work-dir openfhe_core/query_centroid_batch_bench_q4_c512_16384 \
   --poly-modulus-degree 16384 \
   --query-dim 768 \
