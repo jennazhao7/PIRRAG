@@ -1,0 +1,77 @@
+Corpus: 65,000 vectors, dim 768
+
+  Query set: mode=holdout n_test=1000 db=64,000 metric=holdout_recall@10
+    exact ground truth for 1000 queries in 0.55s
+
+######################################################################
+# REFERENCE  naive nlist=4096 nprobe=100  (variable sizes, NOT padded)
+######################################################################
+    k-means nlist=4096 in 7.5s
+  sizes min=1 max=102 mean=15.62
+  holdout_recall@10 = 0.9519
+  candidates ~1,562 (variable per query -- leaks occupancy)
+  target recall for every padded config: 0.9519
+    k-means nlist=512 in 1.2s
+
+  nlist=512: sizes min=2 max=509 mean=125.00 p95=246
+    pad-max nlist=512 W=509            p=27    PIR=13,743  total=14,255  waste=75.4% recall=0.9527
+    split nlist=512 W=16               p=255   PIR=4,080   total=8,311   waste= 5.5% recall=0.9522
+    split nlist=512 W=32               p=133   PIR=4,256   total=6,500   waste=10.9% recall=0.9520
+    split nlist=512 W=48               p=95    PIR=4,560   total=6,155   waste=16.4% recall=0.9520
+    split nlist=512 W=64               p=74    PIR=4,736   total=5,985   waste=19.9% recall=0.9528
+    split nlist=512 W=96               p=54    PIR=5,184   total=6,109   waste=27.9% recall=0.9526
+    split nlist=512 W=128              p=44    PIR=5,632   total=6,385   waste=33.6% recall=0.9521
+    truncate nlist=512 W=16            UNREACHABLE (ceiling 0.2952, dropped 55,880)
+    truncate nlist=512 W=32            UNREACHABLE (ceiling 0.4706, dropped 47,916)
+    truncate nlist=512 W=48            UNREACHABLE (ceiling 0.5918, dropped 40,224)
+    truncate nlist=512 W=64            UNREACHABLE (ceiling 0.6911, dropped 33,033)
+    truncate nlist=512 W=96            UNREACHABLE (ceiling 0.8265, dropped 20,578)
+    truncate nlist=512 W=128           UNREACHABLE (ceiling 0.9087, dropped 11,717)
+    k-means nlist=1024 in 3.6s
+
+  nlist=1024: sizes min=1 max=264 mean=62.50 p95=129
+    pad-max nlist=1024 W=264           p=42    PIR=11,088  total=12,112  waste=76.3% recall=0.9522
+    split nlist=1024 W=16              p=225   PIR=3,600   total=8,093   waste=11.0% recall=0.9522
+    split nlist=1024 W=32              p=123   PIR=3,936   total=6,443   waste=20.2% recall=0.9521
+    split nlist=1024 W=48              p=89    PIR=4,272   total=6,129   waste=28.2% recall=0.9522
+    split nlist=1024 W=64              p=72    PIR=4,608   total=6,133   waste=34.4% recall=0.9519
+    split nlist=1024 W=96              p=54    PIR=5,184   total=6,385   waste=44.5% recall=0.9521
+    split nlist=1024 W=128             p=47    PIR=6,016   total=7,094   waste=53.6% recall=0.9528
+    truncate nlist=1024 W=16           UNREACHABLE (ceiling 0.4448, dropped 48,319)
+    truncate nlist=1024 W=32           UNREACHABLE (ceiling 0.6659, dropped 34,484)
+    truncate nlist=1024 W=48           UNREACHABLE (ceiling 0.8038, dropped 23,060)
+    truncate nlist=1024 W=64           UNREACHABLE (ceiling 0.8918, dropped 14,466)
+    truncate nlist=1024 W=96           p=76    PIR=7,296   total=8,320   waste=39.6% recall=0.9520
+    truncate nlist=1024 W=128          p=46    PIR=5,888   total=6,912   waste=52.0% recall=0.9530
+    k-means nlist=2048 in 5.2s
+
+  nlist=2048: sizes min=1 max=135 mean=31.25 p95=78
+    pad-max nlist=2048 W=135           p=64    PIR=8,640   total=10,688  waste=76.9% recall=0.9521
+    split nlist=2048 W=16              p=204   PIR=3,264   total=8,272   waste=20.1% recall=0.9519
+    split nlist=2048 W=32              p=117   PIR=3,744   total=6,841   waste=35.4% recall=0.9520
+    split nlist=2048 W=48              p=90    PIR=4,320   total=6,794   waste=46.1% recall=0.9520
+    split nlist=2048 W=64              p=77    PIR=4,928   total=7,158   waste=55.2% recall=0.9519
+    split nlist=2048 W=96              p=66    PIR=6,336   total=8,409   waste=67.8% recall=0.9522
+    split nlist=2048 W=128             p=64    PIR=8,192   total=10,241  waste=75.6% recall=0.9521
+    truncate nlist=2048 W=16           UNREACHABLE (ceiling 0.6264, dropped 35,699)
+    truncate nlist=2048 W=32           UNREACHABLE (ceiling 0.8512, dropped 17,462)
+    truncate nlist=2048 W=48           UNREACHABLE (ceiling 0.9404, dropped 7,710)
+    truncate nlist=2048 W=64           p=98    PIR=6,272   total=8,320   waste=53.7% recall=0.9523
+    truncate nlist=2048 W=96           p=66    PIR=6,336   total=8,384   waste=67.6% recall=0.9524
+    truncate nlist=2048 W=128          p=64    PIR=8,192   total=10,240  waste=75.6% recall=0.9519
+    k-means nlist=4096 in 12.1s
+
+  nlist=4096: sizes min=1 max=102 mean=15.62 p95=40
+    pad-max nlist=4096 W=102           p=100   PIR=10,200  total=14,296  waste=84.7% recall=0.9519
+    split nlist=4096 W=16              p=198   PIR=3,168   total=9,284   waste=34.6% recall=0.9521
+    split nlist=4096 W=32              p=127   PIR=4,064   total=8,581   waste=55.7% recall=0.9519
+    split nlist=4096 W=48              p=110   PIR=5,280   total=9,486   waste=68.3% recall=0.9519
+    split nlist=4096 W=64              p=103   PIR=6,592   total=10,716  waste=75.8% recall=0.9519
+    split nlist=4096 W=96              p=101   PIR=9,696   total=13,794  waste=83.7% recall=0.9524
+    truncate nlist=4096 W=16           UNREACHABLE (ceiling 0.8167, dropped 18,955)
+    truncate nlist=4096 W=32           p=357   PIR=11,424  total=15,520  waste=55.0% recall=0.9519
+    truncate nlist=4096 W=48           p=118   PIR=5,664   total=9,760   waste=68.1% recall=0.9521
+    truncate nlist=4096 W=64           p=103   PIR=6,592   total=10,688  waste=75.7% recall=0.9523
+    truncate nlist=4096 W=96           p=100   PIR=9,600   total=13,696  waste=83.7% recall=0.9519
+
+Wrote /private/tmp/claude-501/-Users-jiachenzhao-research-ragpiano-cluster/470dcae2-d240-427d-a915-72b4380b8cb3/scratchpad/pn_full/padded_naive_trial.json

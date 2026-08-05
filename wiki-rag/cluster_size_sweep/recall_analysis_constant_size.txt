@@ -1,0 +1,40 @@
+Constant-cluster-size recall analysis
+==============================================================================
+Database      : 64,000 vectors, dim 768
+Metric        : holdout_recall@10 (1000 queries, seed 1234)
+Index         : ivf-flat, niter=20
+Latency       : numpy reference search, NOT comparable to recall_analysis.txt
+
+Baseline: nlist=4096 nprobe=100 sizes[1..102] mean=15.62
+  centroid dists 4,096 + candidates ~1,562 = 5,658 total (2.44% of DB, varies per query)
+  holdout_recall@10 = 0.9519
+
+Smallest p reaching recall 0.9519, ranked by total
+distance evaluations (centroid stage + candidate stage):
+
+    n      x  pad     p   centr   cands    total  vs base    %DB   recall  penalty  forced%
+--------------------------------------------------------------------------------------------
+   16   4000    0   419   4,000   6,704   10,704    1.89x  10.47   0.9519   1.1487     33.6
+   32   2000    0   163   2,000   5,216    7,216    1.28x   8.15   0.9519   1.1029     32.2
+   64   1000    0    85   1,000   5,440    6,440    1.14x   8.50   0.9521   1.0807     28.6
+  128    500    0    43     500   5,504    6,004    1.06x   8.60   0.9529   1.0543     25.2
+--------------------------------------------------------------------------------------------
+
+Equivalent operating point: n=128, p=43
+  6,004 total distance evaluations vs 5,658 baseline (1.06x), same recall,
+  every cluster exactly 128 wide.
+  Candidate stage 3.52x baseline (equal sizes
+  give up the baseline's implicit adaptivity in dense regions); paid for by
+  the centroid stage dropping 4,096 -> 500 (8.2x fewer encrypted comparisons).
+
+n=16 recall curve (points evaluated):
+  p=250:0.9275 p=375:0.9460 p=407:0.9505 p=415:0.9516 p=417:0.9516 p=418:0.9517 p=419:0.9519 p=423:0.9521 p=438:0.9538 p=500:0.9581 p=1000:0.9777 p=2000:0.9904 p=4000:1.0000
+
+n=32 recall curve (points evaluated):
+  p=125:0.9387 p=157:0.9486 p=161:0.9506 p=162:0.9513 p=163:0.9519 p=165:0.9525 p=173:0.9540 p=188:0.9574 p=250:0.9681 p=500:0.9860 p=1000:0.9951 p=2000:1.0000
+
+n=64 recall curve (points evaluated):
+  p=63:0.9371 p=79:0.9483 p=83:0.9510 p=84:0.9516 p=85:0.9521 p=87:0.9524 p=94:0.9551 p=125:0.9643 p=250:0.9819 p=500:0.9934 p=1000:1.0000
+
+n=128 recall curve (points evaluated):
+  p=32:0.9364 p=40:0.9487 p=42:0.9515 p=43:0.9529 p=44:0.9540 p=48:0.9582 p=63:0.9688 p=125:0.9844 p=250:0.9917 p=500:1.0000
