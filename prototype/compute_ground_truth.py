@@ -7,6 +7,7 @@ For each cluster in the top-100, finds the 5 closest vectors to the query.
 
 import argparse
 import json
+import sys
 import numpy as np
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -14,6 +15,14 @@ import faiss
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from rag_utils import PromptedBGE
+
+# The clustering I/O helpers live with the training code. These prototype scripts
+# are run standalone rather than installed, so point at that directory directly.
+_WIKI_RAG_DIR = Path(__file__).resolve().parents[1] / "wiki-rag"
+if str(_WIKI_RAG_DIR) not in sys.path:
+    sys.path.insert(0, str(_WIKI_RAG_DIR))
+
+import ivf_io
 
 
 def load_query_embedding(query_text: str) -> np.ndarray:
@@ -256,11 +265,16 @@ def main():
     top_cluster_indices = results['centroid_indices'][:args.top_clusters]
     print(f"✓ Loaded {len(top_cluster_indices)} cluster indices")
     
-    # Load cluster lists
+    # Load cluster lists. Works with both the legacy variable-size layout and the
+    # constant-cluster-size layout, whose lists are padded to a fixed width with a
+    # sentinel; load_clustering strips those so the code below never sees them.
     print(f"\nLoading cluster lists from {args.lists}...")
-    with open(args.lists, 'r') as f:
-        lists = json.load(f)
-    print(f"✓ Loaded {len(lists)} clusters")
+    clustering = ivf_io.load_clustering(args.lists)
+    lists = {str(cid): ids for cid, ids in clustering.lists.items()}
+    print(f"✓ Loaded {len(lists)} clusters ({clustering.sizing_mode})")
+    if clustering.is_constant_size:
+        print(f"  {clustering.cluster_size} slots per cluster, "
+              f"{clustering.n_vectors:,} real vectors")
     
     # Load query embedding
     print(f"\nComputing query embedding...")

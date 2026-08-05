@@ -3,21 +3,35 @@
 Plaintext RAG Pipeline after FHE Query.
 
 Pipeline:
-1. Load top-100 cluster IDs from FHE query results
+1. Load top-P cluster IDs from FHE query results
 2. Embed query → vector q
-3. Within each of the 100 clusters, get top-5 vectors (per-cluster KNN)
-4. Merge all ~500 candidates and do a global top-10 (local KNN / sort)
+3. Within each of those clusters, get top-k vectors (per-cluster KNN)
+4. Merge all candidates and do a global top-10 (local KNN / sort)
 5. Map those 10 vector IDs → RAG chunks using the pickle mapping
 6. Build RAG prompt and call LLM
+
+Works with both clustering parameterizations: the legacy fixed-cluster-count
+layout (variable sizes) and the constant-cluster-size layout, whose inverted
+lists are padded to a fixed width with a sentinel that must be skipped. See
+wiki-rag/ivf_io.py for the schema.
 """
 
 import argparse
 import json
+import sys
 import numpy as np
 from pathlib import Path
 from typing import List, Tuple, Dict
 import faiss
 from langchain_community.vectorstores import FAISS
+
+# The clustering I/O helpers live with the training code. These prototype scripts
+# are run standalone rather than installed, so point at that directory directly.
+_WIKI_RAG_DIR = Path(__file__).resolve().parents[2] / "wiki-rag"
+if str(_WIKI_RAG_DIR) not in sys.path:
+    sys.path.insert(0, str(_WIKI_RAG_DIR))
+
+import ivf_io
 from langchain_core.documents import Document
 import sys
 from pathlib import Path
@@ -36,9 +50,20 @@ def load_top_clusters(top_results_path: str, n_clusters: int = 100) -> List[int]
 
 
 def load_cluster_lists(lists_path: str) -> Dict[str, List[int]]:
-    """Load cluster-to-vectors mapping."""
-    with open(lists_path, 'r') as f:
-        return json.load(f)
+    """
+    Load the cluster-to-vectors mapping.
+
+    Handles both layouts. Under constant cluster size every list is padded to a
+    fixed width with ivf_io.PADDING_SENTINEL; those entries are stripped here so
+    that callers never see them. Keys stay strings for backward compatibility
+    with the existing call sites.
+    """
+    clustering = ivf_io.load_clustering(lists_path)
+    if clustering.is_constant_size:
+        print(f"  Constant-size clustering: {clustering.nlist} clusters "
+              f"x {clustering.cluster_size} slots "
+              f"({clustering.n_vectors:,} real vectors)")
+    return {str(cid): ids for cid, ids in clustering.lists.items()}
 
 
 def embed_query(query_text: str) -> np.ndarray:
