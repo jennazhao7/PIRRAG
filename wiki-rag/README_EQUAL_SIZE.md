@@ -9,6 +9,55 @@ need to know to build the PIR and FHE stages on top.
 
 ---
 
+## 0. Both clustering modes are supported — pick one per run
+
+**The original unequal clustering still works, unchanged and unpadded.** This is
+not a migration; nothing was removed. One flag selects the mode, and they are
+mutually exclusive so you cannot accidentally get a mix.
+
+```bash
+# ORIGINAL: fixed cluster count, variable sizes, NO padding.
+python train_ivf.py --faiss-index-file .../index.faiss --k 4096 --output-dir out
+
+# NEW: fixed cluster size n, count derived as ceil(N/n), lists padded to n.
+python train_ivf.py --faiss-index-file .../index.faiss --cluster-size 128 --output-dir out
+```
+
+Omitting both flags gives you `--k 4096`, i.e. exactly the historical default.
+
+|  | `--k K` *(original)* | `--cluster-size n` *(new)* |
+|---|---|---|
+| `sizing_mode` in metadata | `fixed-nlist` | `constant-size` |
+| cluster count | `K`, chosen by you | `ceil(N / n)`, derived |
+| cluster sizes | whatever k-means yields (**1–103** on the 65k index) | exactly `n`, always |
+| padding | **none** | `-1` in unused slots (8–24 slots total) |
+| `lists.json` | variable-length lists, no sentinel | every list exactly `n` long, `-1` padded |
+| `cluster_slots.npy` | not written | written; the canonical artifact |
+| candidates per query | `p ×` (varies per query) | exactly `p × n` |
+| PIR addressing | `offsets[cluster] + index` | `cluster * n + index` |
+
+Verified, not just asserted: fed the shipped centroids, the `--k` path reproduces
+`prototype/data/lists.json` **exactly, 4096/4096 clusters**, and a legacy run's
+`lists.json` contains **no `-1` anywhere**. The original behaviour is bit-identical,
+with one deliberate exception noted in §6: `--niter` is now actually applied, having
+previously been silently discarded, so a re-run is *better trained* than the shipped
+artifact rather than identical to it.
+
+Reading either mode is one call — never branch on list lengths:
+
+```python
+import ivf_io
+c = ivf_io.load_clustering(path)        # a directory, or a bare lists.json
+c.is_constant_size                       # False for --k, True for --cluster-size
+c.members(cluster_id)                    # real vector ids, sentinel already stripped
+```
+
+There is also `--assignment faiss-nearest`, which gives plain nearest-centroid
+variable-size assignment as an explicit diagnostic baseline. That is what the
+4096/4096 oracle test above uses.
+
+---
+
 ## 1. What changed
 
 ### Before
@@ -238,26 +287,65 @@ Three consequences:
 3. **Fetch size is fixed** at `p * n` (5,504 at n=128, p=43) rather than varying
    per query.
 
-**The one thing you must check first.** For `cid * n + idx` to be a real PIR
-address, the PIR database has to be laid out cluster-major. Today it is **not**:
-`prototype/faiss_processor.py:76` emits one record per vector in global FAISS row
-order, and `pickle_processor.py` does the same in docstore order. The Go client
-prints `from cluster N at index M`, so the cluster-to-row translation currently
-lives inside the external `easypir` project, which is not in this repository.
+**The database must be laid out cluster-major, and `prototype/pir_export.py` does
+that for you.** It was not: `faiss_processor.py:76` emits one record per vector in
+global FAISS row order and `pickle_processor.py` does the same in docstore order,
+so a record's position said nothing about its cluster. The gap was bridged by
+shipping `lists.json` to the client and translating before each fetch.
 
-You have two options, and this was deliberately left open:
+Reorder once, and the row index *becomes* the PIR address:
 
-- **Recommended:** add a cluster-major export to `faiss_processor.py` /
-  `pickle_processor.py` that writes rows in slot order (padded rows zero-filled).
-  Then the global row index *is* the address, the Go side needs no cluster
-  knowledge at all, and `lists.json` becomes a pure evaluation artifact. Entirely
-  inside this repo.
-- Keep the current global ordering and compute `cid * n + idx` inside `easypir`.
-  Needs access to that repo.
+```bash
+# vectors
+python pir_export.py --clustering ../wiki-rag/ivf_output_n128 \
+    --vectors-npy vectors.npy --output pir_vectors.npy --verify
 
-Padding rows (`-1` slots) must be handled: fetching one is legitimate, and the
-client should discard it. At n=128 on the full 65,000-vector database there are 8
-such slots out of 65,024, so this is a correctness detail rather than a cost.
+# document records (chr(31)-separated fixed-width, from pickle_processor.py)
+python pir_export.py --clustering ../wiki-rag/ivf_output_n128 \
+    --records ../uniform_index.txt --output pir_db.txt --verify
+```
+
+It writes the reordered database plus a `.manifest.json` carrying the addressing
+rule, row counts, and (for variable-size) the offsets table. **It works for both
+clustering modes**, so cleaning up the PIR handoff does not require adopting
+constant-size clusters:
+
+| clustering | address | what the client needs |
+|---|---|---|
+| `--cluster-size n` | `cluster * n + index` | the single integer `n` |
+| `--k K` *(original)* | `offsets[cluster] + index` | `K + 1` offsets — 32 KB at K=4096, vs 768 KB for `lists.json` |
+
+Either way `lists.json` stops being a client dependency and becomes a pure
+evaluation artifact. The offsets table is also a smaller disclosure than
+`lists.json`: it reveals cluster *sizes* only, not which vector sits where.
+
+`--verify` checks the property everything else rests on — that the documented
+formula lands on the right vector — by resolving 2,000 random `(cluster, index)`
+pairs against the clustering, plus confirming every vector appears at exactly one
+row and only padding rows hold the sentinel. Measured on the real index:
+
+```
+constant-size n=128 : 508 clusters, 65,024 rows (24 padding)
+                      row = cluster_id * 128 + index      [verified]
+legacy    nlist=4096 : 65,000 rows (0 padding), 32 KB offsets
+                      row = offsets[cluster_id] + index    [verified]
+```
+
+Padding rows are blank (records) or zero (vectors) so every row keeps the same
+width; the client discards them on the sentinel recorded in the manifest. At n=128
+there are 24 such rows out of 65,024.
+
+> **The export refuses a holdout clustering.** In `--recall-mode holdout` the
+> vector ids index the held-out subset, so reordering a full-corpus database by
+> them would pair rows with the wrong payloads — and the result would look
+> perfectly well-formed. `pir_export.py` errors out unless you pass
+> `--allow-holdout-ids`. Build deployable artifacts with `--recall-mode perturbed`,
+> which keeps the database whole.
+
+What is still outside this repo: the `easypir` Go server takes a database file and
+serves records positionally, so pointing it at the reordered file is all that is
+needed — no Go changes. That last step is unverified here, since `easypir` is not
+in this repository.
 
 ### FHE
 
@@ -394,6 +482,7 @@ New:
 | `sweep_cluster_size.py` | Finds the `n` matching baseline recall at least total cost |
 | `fhe_prepare.py` | Exports and validates FHE centroid inputs; kernel oracle |
 | `cluster_size_sweep/` | Measured results |
+| `../prototype/pir_export.py` | Cluster-major PIR database export (both modes) + address verification |
 
 Modified: `train_ivf.py` (sizing flags, the `--niter` fix, `run_pipeline`,
 constant-size export), plus the two plaintext consumers and
